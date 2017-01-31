@@ -26,6 +26,7 @@ def main(config='.travis.yml', destdir='.'):
                     .format(cmd) for cmd in env]))
         with open(sh_name + '.links', 'w') as f:
             f.write(json.dumps(services(config)))
+    return config
 
 
 def services(config):
@@ -202,8 +203,8 @@ def setup_python(config, envs):
         setup = []
         envs.append(setup)
 
-        setup.append(
-            apt_get('python-setuptools', 'python-software-properties'))
+        setup.append(apt_get('python-setuptools', 'software-properties-common',
+                             'python-software-properties'))
         setup.append('apt-add-repository --yes ppa:fkrull/deadsnakes')
         setup.append(apt_get('python{}-dev'.format(version)))
         setup.append('easy_install virtualenv')

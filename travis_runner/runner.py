@@ -41,7 +41,9 @@ def main(debug=False, dry_run=False):
     failed = True
 
     with tempdir(debug) as _dir:
-        generate.main(destdir=_dir)
+        config = generate.main(destdir=_dir)
+        dist = config.get('dist', 'precise')
+
         if dry_run:
             return
 
@@ -60,7 +62,7 @@ def main(debug=False, dry_run=False):
                 '-v $(pwd):/src',
                 '-v {1}:/{1}',
                 use_pip_cache(),
-                'ubuntu:precise bash -x {2}')).format(link_arg, _dir, env)
+                'ubuntu:{2} bash -x {3}')).format(link_arg, _dir, dist, env)
             try:
                 subprocess.check_call(cmd, shell=True)
                 failed = False
